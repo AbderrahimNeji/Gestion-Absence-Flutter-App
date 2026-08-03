@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nom = $conn->real_escape_string($data->nom);
     $prenom = $conn->real_escape_string($data->prenom);
     $email = $conn->real_escape_string($data->email);
-    $password = $conn->real_escape_string($data->password);
+    $password = password_hash($data->password, PASSWORD_DEFAULT);
     $classe_id = (int)$data->classe_id;
 
     // ajouter utilisateur
