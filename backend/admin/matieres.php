@@ -26,11 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit();
     }
 
-    $nom = $conn->real_escape_string($data->nom);
+    $stmt = $conn->prepare("INSERT INTO matieres (nom) VALUES (?)");
+    $stmt->bind_param("s", $data->nom);
 
-    $sql = "INSERT INTO matieres (nom) VALUES ('$nom')";
-
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo json_encode(["success" => 1, "message" => "Matière ajoutée avec succès"]);
     } else {
         echo json_encode(["success" => 0, "message" => "Erreur lors de l'ajout de la matière"]);

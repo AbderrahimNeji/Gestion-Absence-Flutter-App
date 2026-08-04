@@ -26,13 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit();
     }
 
-    $nom = $conn->real_escape_string($data->nom);
-    $niveau = isset($data->niveau) ? $conn->real_escape_string($data->niveau) : '';
+    $niveau = isset($data->niveau) ? $data->niveau : '';
 
-    $sql = "INSERT INTO classes (nom, niveau)
-            VALUES ('$nom', '$niveau')";
+    $stmt = $conn->prepare("INSERT INTO classes (nom, niveau) VALUES (?, ?)");
+    $stmt->bind_param("ss", $data->nom, $niveau);
 
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo json_encode(["success" => 1, "message" => "Classe ajoutée avec succès"]);
     } else {
         echo json_encode(["success" => 0, "message" => "Erreur lors de l'ajout de la classe"]);
