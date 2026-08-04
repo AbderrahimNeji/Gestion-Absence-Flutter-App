@@ -14,17 +14,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($data->email);
     $password = trim($data->password);
 
-    $stmt = $conn->prepare("SELECT id, nom, prenom, email, role FROM utilisateurs WHERE email = ? AND password = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, nom, prenom, email, role, password FROM utilisateurs WHERE email = ? LIMIT 1");
     if (!$stmt) {
         echo json_encode(["success" => 0, "message" => "Erreur lors de la préparation de la requête"]);
         exit();
     }
 
-    $stmt->bind_param("ss", $email, $password);
+    $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($userId, $nom, $prenom, $userEmail, $role);
+    $stmt->bind_result($userId, $nom, $prenom, $userEmail, $role, $storedPassword);
+    $found = $stmt->fetch();
+    $stmt->close();
 
-    if ($stmt->fetch()) {
+    // Comptes créés avant le hachage : mot de passe en clair, re-haché à la connexion
+    $legacy = $found && !password_get_info($storedPassword)['algo'] && hash_equals($storedPassword, $password);
+
+    if ($found && ($legacy || password_verify($password, $storedPassword))) {
+
+        if ($legacy || password_needs_rehash($storedPassword, PASSWORD_DEFAULT)) {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $up = $conn->prepare("UPDATE utilisateurs SET password = ? WHERE id = ?");
+            if ($up) {
+                $up->bind_param("si", $hash, $userId);
+                $up->execute();
+                $up->close();
+            }
+        }
 
         // Préparer la réponse avec les infos de base
         $response = [
@@ -71,8 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "message" => "Email ou mot de passe incorrect"
         ]);
     }
-
-    $stmt->close();
 } else {
     echo json_encode([
         "success" => 0,
