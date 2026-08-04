@@ -34,17 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit();
     }
 
-    $nom = $conn->real_escape_string($data->nom);
-    $prenom = $conn->real_escape_string($data->prenom);
-    $email = $conn->real_escape_string($data->email);
     $password = password_hash($data->password, PASSWORD_DEFAULT);
     $classe_id = (int)$data->classe_id;
 
     // ajouter utilisateur
-    $sql1 = "INSERT INTO utilisateurs (nom,prenom,email,password,role)
-             VALUES ('$nom','$prenom','$email','$password','etudiant')";
+    $stmt = $conn->prepare("INSERT INTO utilisateurs (nom,prenom,email,password,role) VALUES (?,?,?,?,'etudiant')");
+    $stmt->bind_param("ssss", $data->nom, $data->prenom, $data->email, $password);
 
-    if ($conn->query($sql1)) {
+    if ($stmt->execute()) {
 
         $user_id = $conn->insert_id;
 
@@ -69,9 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     $id = (int)$data->id;
-    $nom = $conn->real_escape_string($data->nom);
-    $prenom = $conn->real_escape_string($data->prenom);
-    $email = $conn->real_escape_string($data->email);
     $classe_id = (int)$data->classe_id;
 
     // récupérer utilisateur_id
@@ -84,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $user_id = $row['utilisateur_id'];
 
     // update utilisateurs
-    $conn->query("UPDATE utilisateurs 
-                  SET nom='$nom', prenom='$prenom', email='$email'
-                  WHERE id=$user_id");
+    $stmt = $conn->prepare("UPDATE utilisateurs SET nom=?, prenom=?, email=? WHERE id=?");
+    $stmt->bind_param("sssi", $data->nom, $data->prenom, $data->email, $user_id);
+    $stmt->execute();
 
     // update classe
     $conn->query("UPDATE etudiants 
