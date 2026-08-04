@@ -41,15 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $enseignant_id = (int)$data->enseignant_id;
     $classe_id = (int)$data->classe_id;
     $matiere_id = (int)$data->matiere_id;
-    $date = $conn->real_escape_string($data->date_seance);
-    $debut = $conn->real_escape_string($data->heure_debut);
-    $fin = $conn->real_escape_string($data->heure_fin);
 
-    $sql = "INSERT INTO seances
+    $stmt = $conn->prepare("INSERT INTO seances
             (enseignant_id, classe_id, matiere_id, date_seance, heure_debut, heure_fin)
-            VALUES ($enseignant_id, $classe_id, $matiere_id, '$date', '$debut', '$fin')";
+            VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iiisss", $enseignant_id, $classe_id, $matiere_id, $data->date_seance, $data->heure_debut, $data->heure_fin);
 
-    if ($conn->query($sql)) {
+    if ($stmt->execute()) {
         echo json_encode(["success" => 1, "message" => "Séance ajoutée avec succès"]);
     } else {
         echo json_encode(["success" => 0, "message" => "Erreur lors de l'ajout de la séance"]);
