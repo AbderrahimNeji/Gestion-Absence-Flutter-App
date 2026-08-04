@@ -26,23 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit();
     }
 
-    $nom = $conn->real_escape_string($data->nom);
-    $prenom = $conn->real_escape_string($data->prenom);
-    $email = $conn->real_escape_string($data->email);
     $password = password_hash($data->password, PASSWORD_DEFAULT);
-    $specialite = isset($data->specialite) ? $conn->real_escape_string($data->specialite) : '';
+    $specialite = isset($data->specialite) ? $data->specialite : '';
 
-    $sql1 = "INSERT INTO utilisateurs (nom,prenom,email,password,role)
-             VALUES ('$nom','$prenom','$email','$password','enseignant')";
+    $stmt = $conn->prepare("INSERT INTO utilisateurs (nom,prenom,email,password,role) VALUES (?,?,?,?,'enseignant')");
+    $stmt->bind_param("ssss", $data->nom, $data->prenom, $data->email, $password);
 
-    if ($conn->query($sql1)) {
+    if ($stmt->execute()) {
 
         $user_id = $conn->insert_id;
 
-        $sql2 = "INSERT INTO enseignants (utilisateur_id,specialite)
-                 VALUES ($user_id,'$specialite')";
-
-        $conn->query($sql2);
+        $stmt2 = $conn->prepare("INSERT INTO enseignants (utilisateur_id,specialite) VALUES (?,?)");
+        $stmt2->bind_param("is", $user_id, $specialite);
+        $stmt2->execute();
 
         echo json_encode(["success" => 1, "message" => "Enseignant ajouté avec succès"]);
     } else {
@@ -59,10 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     $id = (int)$data->id;
-    $nom = $conn->real_escape_string($data->nom);
-    $prenom = $conn->real_escape_string($data->prenom);
-    $email = $conn->real_escape_string($data->email);
-    $specialite = isset($data->specialite) ? $conn->real_escape_string($data->specialite) : '';
+    $specialite = isset($data->specialite) ? $data->specialite : '';
 
     // récupérer utilisateur_id
     $res = $conn->query("SELECT utilisateur_id FROM enseignants WHERE id=$id");
@@ -74,14 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $user_id = $row['utilisateur_id'];
 
     // update utilisateurs
-    $conn->query("UPDATE utilisateurs 
-                  SET nom='$nom', prenom='$prenom', email='$email'
-                  WHERE id=$user_id");
+    $stmt = $conn->prepare("UPDATE utilisateurs SET nom=?, prenom=?, email=? WHERE id=?");
+    $stmt->bind_param("sssi", $data->nom, $data->prenom, $data->email, $user_id);
+    $stmt->execute();
 
     // update spécialité
-    $conn->query("UPDATE enseignants 
-                  SET specialite='$specialite'
-                  WHERE id=$id");
+    $stmt = $conn->prepare("UPDATE enseignants SET specialite=? WHERE id=?");
+    $stmt->bind_param("si", $specialite, $id);
+    $stmt->execute();
 
     echo json_encode(["success" => 1, "message" => "Enseignant modifié avec succès"]);
 
