@@ -15,16 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $errors = 0;
 
+    $stmt = $conn->prepare("INSERT INTO absences (seance_id, etudiant_id, statut)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE statut = VALUES(statut)");
+
     foreach ($absences as $a) {
 
         $etudiant_id = (int)$a->etudiant_id;
-        $statut = $conn->real_escape_string($a->statut);
+        $statut = isset($a->statut) ? $a->statut : '';
 
-        $sql = "INSERT INTO absences (seance_id, etudiant_id, statut)
-                VALUES ($seance_id, $etudiant_id, '$statut')
-                ON DUPLICATE KEY UPDATE statut='$statut'";
+        // Seules les valeurs de l'ENUM sont acceptées
+        if (!in_array($statut, ['present', 'absent'], true)) {
+            $errors++;
+            continue;
+        }
 
-        if (!$conn->query($sql)) {
+        $stmt->bind_param("iis", $seance_id, $etudiant_id, $statut);
+        if (!$stmt->execute()) {
             $errors++;
         }
     }
