@@ -12,10 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 // === Database connection ===
-$host = "localhost";
-$db_name = "gest_absence";
-$username = "root";
-$password = "";
+// Valeurs par défaut pour XAMPP en local, surchargeables par variables d'environnement
+$host = getenv("DB_HOST") ?: "localhost";
+$db_name = getenv("DB_NAME") ?: "gest_absence";
+$username = getenv("DB_USER") ?: "root";
+$password = getenv("DB_PASS") ?: "";
 
 $conn = new mysqli($host, $username, $password, $db_name);
 
