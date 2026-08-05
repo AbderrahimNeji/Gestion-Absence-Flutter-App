@@ -65,6 +65,7 @@ class _EtudiantsScreenState extends State<EtudiantsScreen> {
               ),
               TextField(
                 controller: passwordCtrl,
+                obscureText: true,
                 decoration: const InputDecoration(labelText: 'Mot de passe'),
               ),
               const SizedBox(height: 8),

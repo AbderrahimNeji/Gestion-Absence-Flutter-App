@@ -60,6 +60,7 @@ class _EnseignantsScreenState extends State<EnseignantsScreen> {
               ),
               TextField(
                 controller: passwordCtrl,
+                obscureText: true,
                 decoration: const InputDecoration(labelText: 'Mot de passe'),
               ),
               TextField(
