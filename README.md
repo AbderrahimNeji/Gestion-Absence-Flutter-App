@@ -48,14 +48,20 @@ It allows administrators, teachers, and students to manage and track attendance 
 ## 📂 Project Structure
 
 ```
-lib/
- ├── config/          # API configuration
- ├── screens/
- │    ├── admin/      # Admin screens
- │    ├── enseignant/ # Teacher screens
- │    ├── etudiant/   # Student screens
- ├── services/        # API services
- └── main.dart        # Entry point
+backend/                  # PHP API
+ ├── admin/               # Classes, subjects, sessions, teachers, students
+ ├── auth/login.php       # Login endpoint
+ ├── config/database.php  # DB connection + CORS headers
+ ├── enseignant/          # Teacher endpoints (sessions, roll call)
+ ├── etudiant/            # Student endpoints (absences, profile)
+ └── gest_absence.sql     # Schema + sample data
+frontend/                 # Flutter app
+ └── lib/
+      ├── config/         # API configuration
+      ├── models/         # Data models
+      ├── screens/        # admin / enseignant / etudiant screens
+      ├── services/       # API services
+      └── main.dart       # Entry point
 ```
 
 ---
@@ -73,6 +79,7 @@ git clone <your-repo-url>
 ### 2. Install dependencies
 
 ```bash
+cd frontend
 flutter pub get
 ```
 
@@ -80,7 +87,7 @@ flutter pub get
 
 ### 3. Configure Backend
 
-* Place backend folder in:
+* Copy the `backend` folder to:
 
 ```
 C:\xampp\htdocs\gest_absence_api
@@ -97,11 +104,7 @@ C:\xampp\htdocs\gest_absence_api
 http://localhost/phpmyadmin
 ```
 
-* Import or create database:
-
-```
-gest_absence
-```
+* Import `backend/gest_absence.sql` (creates the `gest_absence` database with sample data)
 
 ---
 
@@ -110,7 +113,7 @@ gest_absence
 Open:
 
 ```
-lib/config/api_config.dart
+frontend/lib/config/api_config.dart
 ```
 
 Set:
