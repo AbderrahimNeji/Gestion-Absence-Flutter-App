@@ -165,8 +165,10 @@ http://localhost/gest_absence_api/admin/etudiants.php
 ## ⚠️ Notes
 
 * This project is for educational purposes
-* Security improvements (like password hashing) are not implemented
-* CORS is enabled for development
+* Passwords are hashed with `password_hash()`; sample accounts stored in plain text are re-hashed on their first login
+* All queries use prepared statements
+* Database credentials can be set with `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` (defaults match XAMPP)
+* CORS is open (`*`) for development; restrict it before deploying
 
 ---
 
