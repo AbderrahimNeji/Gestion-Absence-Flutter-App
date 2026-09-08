@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $email = trim($data->email);
-    $password = trim($data->password);
+    // Pas de trim : le mot de passe est haché tel quel à la création du compte
+    $password = $data->password;
 
     $stmt = $conn->prepare("SELECT id, nom, prenom, email, role, password FROM utilisateurs WHERE email = ? LIMIT 1");
     if (!$stmt) {
