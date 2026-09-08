@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!$data || !isset($data->seance_id) || !isset($data->absences)) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "Données manquantes (seance_id et absences requis)"]);
         exit();
     }

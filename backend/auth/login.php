@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Vérifier que les données sont présentes
     if (!$data || !isset($data->email) || !isset($data->password)) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "Email et mot de passe requis"]);
         exit();
     }

@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!$data || !isset($data->enseignant_id) || !isset($data->classe_id) || !isset($data->matiere_id) || !isset($data->date_seance) || !isset($data->heure_debut) || !isset($data->heure_fin)) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "Données manquantes"]);
         exit();
     }

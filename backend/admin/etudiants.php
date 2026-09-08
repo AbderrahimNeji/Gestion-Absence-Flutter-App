@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!$data || !isset($data->nom) || !isset($data->prenom) || !isset($data->email) || !isset($data->password) || !isset($data->classe_id)) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "Données manquantes"]);
         exit();
     }
@@ -61,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!$data || !isset($data->id)) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "ID manquant"]);
         exit();
     }
@@ -94,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
     if ($id == 0) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "ID manquant"]);
         exit();
     }

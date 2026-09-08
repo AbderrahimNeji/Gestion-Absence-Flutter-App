@@ -4,6 +4,7 @@ include("../config/database.php");
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (!isset($_GET['id'])) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "ID de l'enseignant requis"]);
         exit();
     }

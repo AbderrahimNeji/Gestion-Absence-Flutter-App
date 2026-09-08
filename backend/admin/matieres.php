@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $data = json_decode(file_get_contents("php://input"));
 
     if (!$data || !isset($data->nom)) {
+        http_response_code(400);
         echo json_encode(["success" => 0, "message" => "Nom de la matière requis"]);
         exit();
     }
