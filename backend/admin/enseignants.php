@@ -102,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     echo json_encode(["success" => 1, "message" => "Enseignant supprimé avec succès"]);
 
 } else {
+    http_response_code(405);
     echo json_encode(["success" => 0, "message" => "Méthode non autorisée"]);
 }
 ?>
