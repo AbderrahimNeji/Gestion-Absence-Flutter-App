@@ -83,12 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "data" => $response
         ]);
     } else {
+        http_response_code(401);
         echo json_encode([
             "success" => 0,
             "message" => "Email ou mot de passe incorrect"
         ]);
     }
 } else {
+    http_response_code(405);
     echo json_encode([
         "success" => 0,
         "message" => "Méthode non autorisée"
