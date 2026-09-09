@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             JOIN etudiants e ON a.etudiant_id = e.id
             JOIN seances s ON a.seance_id = s.id
             JOIN matieres m ON s.matiere_id = m.id
-            WHERE e.utilisateur_id = $id";
+            WHERE e.utilisateur_id = $id
+            ORDER BY s.date_seance DESC, s.heure_debut DESC";
 
     $result = $conn->query($sql);
 
