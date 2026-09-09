@@ -116,11 +116,13 @@ Open:
 frontend/lib/config/api_config.dart
 ```
 
-Set:
+Change `defaultValue`, or pass it at run time without editing the file:
 
-```dart
-const String baseUrl = "http://localhost/gest_absence_api";
+```bash
+flutter run --dart-define=API_BASE_URL=http://<your-ip>/gest_absence_api
 ```
+
+Use your machine's LAN IP when testing on a real phone (`localhost` points to the phone itself).
 
 ---
 
