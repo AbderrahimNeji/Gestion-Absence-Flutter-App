@@ -170,7 +170,7 @@ http://localhost/gest_absence_api/admin/etudiants.php
 * Passwords are hashed with `password_hash()`; sample accounts stored in plain text are re-hashed on their first login
 * All queries use prepared statements
 * Database credentials can be set with `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` (defaults match XAMPP)
-* CORS is open (`*`) for development; restrict it before deploying
+* CORS is open (`*`) by default; set `CORS_ORIGIN` to your domain before deploying
 
 ---
 
