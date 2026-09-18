@@ -1,6 +1,7 @@
 <?php
 // === CORS Headers (needed for Flutter to communicate with the API) ===
-header("Access-Control-Allow-Origin: *");
+// "*" en développement ; définir CORS_ORIGIN (ex. https://mon-domaine.tn) en production
+header("Access-Control-Allow-Origin: " . (getenv("CORS_ORIGIN") ?: "*"));
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
