@@ -153,6 +153,27 @@ flutter run
 
 ---
 
+## 🔌 API Endpoints
+
+Base URL: `http://localhost/gest_absence_api`
+
+| Endpoint | Methods | Purpose |
+|---|---|---|
+| `auth/login.php` | POST | Log in (`email`, `password`) |
+| `admin/classes.php` | GET, POST | List / create classes |
+| `admin/matieres.php` | GET, POST | List / create subjects |
+| `admin/seances.php` | GET, POST | List / create sessions |
+| `admin/enseignants.php` | GET, POST, PUT, DELETE | Manage teachers |
+| `admin/etudiants.php` | GET, POST, PUT, DELETE | Manage students (`?classe_id=` filter) |
+| `enseignant/seances.php?id=` | GET | A teacher's sessions |
+| `enseignant/absences.php` | POST | Save roll call (`seance_id`, `absences[]`) |
+| `etudiant/absences.php?id=` | GET | A student's absences |
+| `etudiant/profil.php?id=` | GET | A student's profile |
+
+Responses are JSON `{ "success": 0|1, ... }` with matching HTTP status codes (400, 401, 405).
+
+---
+
 ## 🧪 Testing
 
 * Ensure XAMPP is running
