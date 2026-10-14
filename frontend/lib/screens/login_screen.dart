@@ -20,7 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
+    // Le backend compare le mot de passe tel quel (espaces inclus).
+    final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
       _showError('Veuillez remplir tous les champs');

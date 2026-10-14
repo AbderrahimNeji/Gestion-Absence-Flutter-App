@@ -28,8 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $found = $stmt->fetch();
     $stmt->close();
 
-    // Comptes créés avant le hachage : mot de passe en clair, re-haché à la connexion
-    $legacy = $found && !password_get_info($storedPassword)['algo'] && hash_equals($storedPassword, $password);
+    // Comptes créés avant le hachage : mot de passe en clair, re-haché à la connexion.
+    // hash_equals() lève une ValueError en PHP 8 si les longueurs diffèrent.
+    $legacy = $found
+        && !password_get_info($storedPassword)['algo']
+        && strlen($storedPassword) === strlen($password)
+        && hash_equals($storedPassword, $password);
 
     if ($found && ($legacy || password_verify($password, $storedPassword))) {
 
